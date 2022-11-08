@@ -8,7 +8,11 @@
         <el-header class="page-header">
           <nav-header @fold-change="handleFoldChange"></nav-header>
         </el-header>
-        <el-main class="page-content">Main</el-main>
+        <el-main class="page-content">
+          <div class="page-info">
+            <router-view></router-view>
+          </div>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -23,7 +27,6 @@ export default defineComponent({
     const isCollapse = ref(false);
     const handleFoldChange = (isFold: boolean) => {
       isCollapse.value = isFold;
-      console.log(isCollapse.value);
     };
 
     return { handleFoldChange, isCollapse };
@@ -51,6 +54,10 @@ export default defineComponent({
 
 .page-content {
   height: calc(100% - 48px);
+  .page-info {
+    background-color: #fff;
+    border-radius: 5px;
+  }
 }
 
 .el-header,

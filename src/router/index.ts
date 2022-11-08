@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import LocalCache from "@/utils/cache";
+import { firstMenu } from "@/utils/map-menus";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -7,11 +8,19 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/login",
+    name: "login",
     component: () => import("@/views/Login/Login.vue"),
   },
   {
     path: "/main",
-    component: () => import("@/views/Main/Main.vue"),
+    name: "main",
+    component: () => import("@/views/main/main.vue"),
+    //根据usermenu进行动态加载路由
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: () => import("@/views/not-found/not-found.vue"),
   },
 ];
 
@@ -26,6 +35,9 @@ router.beforeEach((to) => {
     if (!token) {
       return "/login";
     }
+  }
+  if (to.path == "/main") {
+    return firstMenu.url;
   }
 });
 

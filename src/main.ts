@@ -10,8 +10,8 @@ import { setupStore } from "./store";
 const app = createApp(App);
 
 register(app);
-app.use(store).use(router).mount("#app");
 setupStore();
+app.use(store).use(router).mount("#app");
 
 //注册icon图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

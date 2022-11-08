@@ -1,6 +1,6 @@
 <template>
-  <div class="menu">
-    <h2>menu</h2>
+  <div>
+    <h2>notFound</h2>
   </div>
 </template>
 
@@ -8,11 +8,11 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "xp-menu",
   setup() {
     return {};
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

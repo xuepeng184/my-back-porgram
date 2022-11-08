@@ -1,7 +1,7 @@
 //统一出口
 import axios from "axios";
 import type { AxiosInstance } from "axios";
-import { XpRequestConfig, XpRequestInterceptor } from './type';
+import { XpRequestConfig, XpRequestInterceptor } from "./type";
 
 import { ElLoading } from "element-plus";
 // import LoadingInstance from 'element-plus/lib/components/loading/src/loading.d.ts'
@@ -50,26 +50,26 @@ class XpRequest {
     );
   }
 
-  request<T>(config: XpRequestConfig<T>):Promise<T>{
+  request<T = any>(config: XpRequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
-          //判断是否需要显示loading
-    if(config.showLoading===false){
-      this.showLoading=config.showLoading
-    }
+      //判断是否需要显示loading
+      if (config.showLoading === false) {
+        this.showLoading = config.showLoading;
+      }
 
-    this.instance.request<any,T>(config).then((res) => {
-      this.showLoading=true
-      resolve(res)
+      this.instance.request<any, T>(config).then((res) => {
+        this.showLoading = true;
+        resolve(res);
+      });
     });
-    })
-  }
-  
-  get<T>(config:XpRequestConfig<T>):Promise<T>{
-    return this.request<T>({...config,method:'get'})
   }
 
-  post<T>(config:XpRequestConfig<T>):Promise<T>{
-    return this.request<T>({...config,method:'post'})
+  get<T = any>(config: XpRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "get" });
+  }
+
+  post<T = any>(config: XpRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "post" });
   }
 
   //所有实例都有的拦截器

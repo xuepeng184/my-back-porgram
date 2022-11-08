@@ -1,9 +1,13 @@
-const { defineConfig } = require("@vue/cli-service");
-
+const {
+  defineConfig
+} = require("@vue/cli-service");
+const path = require('path')
 //自动导入element-plus需要的依赖
 const AutoImport = require("unplugin-auto-import/webpack");
 const Components = require("unplugin-vue-components/webpack");
-const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
+const {
+  ElementPlusResolver
+} = require("unplugin-vue-components/resolvers");
 
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -17,6 +21,12 @@ module.exports = defineConfig({
         resolvers: [ElementPlusResolver()],
       }),
     ],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+        components: '@/components'
+      }
+    }
   },
   // devServer:{
   //   proxy:{

@@ -11,6 +11,7 @@
       unique-opened
       :collapse="collapse"
       text-color="#b7bdc3"
+      :default-active="defaultActive"
     >
       <template v-for="item in userMenus" :key="item.id">
         <!-- 这是一级菜单 可以展开的情况-->
@@ -40,7 +41,10 @@
             </template>
             <!-- 遍历里面的item -->
             <template v-for="subItem in item.children" :key="subItem.id">
-              <el-menu-item :index="subItem.id + ''">
+              <el-menu-item
+                :index="subItem.id + ''"
+                @click="handleMenuItem(subItem)"
+              >
                 <i v-if="subItem.icon" :class="subItem.icon"></i>
                 <span>{{ subItem.name }}</span>
               </el-menu-item>
@@ -60,9 +64,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../../../store/index";
-
+import { useRouter, useRoute } from "vue-router";
+import { pathMapToMenus } from "../../../utils/map-menus";
 export default defineComponent({
   props: {
     collapse: {
@@ -72,9 +77,24 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const router = useRouter();
+    const route = useRoute();
     const userMenus = computed(() => store.state.login.userMenus);
+
+    const currentPath = route.path;
+    const menu = pathMapToMenus(userMenus.value, currentPath);
+    const defaultActive = ref(menu.id + "");
+
+    const handleMenuItem = (item: any) => {
+      router.push({
+        path: item.url ?? "/not-found",
+      });
+    };
+
     return {
       userMenus,
+      handleMenuItem,
+      defaultActive,
     };
   },
 });
