@@ -1,6 +1,32 @@
 <template>
   <div class="xpTable">
-    <el-table :data="listData" border style="width: 100%">
+    <div class="header">
+      <slot name="header">
+        <div class="title">{{ title }}</div>
+        <div class="handler">
+          <slot name="headerHandler"></slot>
+        </div>
+      </slot>
+    </div>
+    <el-table
+      :data="listData"
+      border
+      style="width: 100%"
+      @selection-change="handleSelect"
+    >
+      <el-table-column
+        v-if="showSelectColumn"
+        type="selection"
+        align="center"
+        width="60"
+      ></el-table-column>
+      <el-table-column
+        v-if="showIndexColumn"
+        type="index"
+        label="序号"
+        align="center"
+        width="60"
+      ></el-table-column>
       <template v-for="propItem in propList" :key="propItem.prop">
         <el-table-column v-bind="propItem" align="center">
           <template #default="scope">
@@ -11,28 +37,77 @@
         </el-table-column>
       </template>
     </el-table>
+    <div class="footer">
+      <slot name="footer">
+        <el-pagination
+          :currentPage="currentPage4"
+          :page-size="100"
+          :page-sizes="[100, 200, 300, 400]"
+          layout="->,total, sizes, prev, pager, next, jumper"
+          :total="400"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </slot>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
 export default defineComponent({
   props: {
     listData: {
-      type: Array ,
-      required: true,
+      type: Array,
     },
     propList: {
       type: Array as unknown as any,
-      required: true,
+    },
+    showIndexColumn: {
+      type: Boolean,
+      default: false,
+    },
+    showSelectColumn: {
+      type: Boolean,
+      default: false,
+    },
+    title: {
+      type: String,
+      default: "",
     },
   },
-  setup() {
-    return {};
+  emits: ["selectChange"],
+  setup(props, { emit }) {
+    const handleSelect = (value: any) => {
+      emit("selectChange", value);
+    };
+    return { handleSelect };
   },
 });
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.header {
+  display: flex;
+  height: 45px;
+  padding: 0 5px;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .handler {
+    align-items: center;
+  }
+}
+
+.footer {
+  overflow: hidden;
+  margin-top: 15px;
+  padding-right: 15px;
+  padding-bottom: 20px;
+}
 </style>

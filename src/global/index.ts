@@ -1,6 +1,7 @@
 import { App } from "vue";
 import registerElement from "./register-element";
-
-export default function register(app:App){
-  registerElement(app)
+import registerPro from "./register-pro";
+export default function register(app: App) {
+  app.use(registerElement);
+  app.use(registerPro);
 }

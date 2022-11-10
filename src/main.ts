@@ -9,9 +9,11 @@ import register from "./global/index";
 import { setupStore } from "./store";
 const app = createApp(App);
 
-register(app);
+app.use(register);
 setupStore();
-app.use(store).use(router).mount("#app");
+app.use(store).use(router);
+
+app.mount("#app");
 
 //注册icon图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

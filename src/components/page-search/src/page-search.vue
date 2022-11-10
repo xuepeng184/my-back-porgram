@@ -6,7 +6,9 @@
       </template>
       <template #footer>
         <div class="handle-buttons">
-          <el-button type="primary" icon="Refresh">重置</el-button>
+          <el-button type="primary" icon="Refresh" @click="handleClickReset"
+            >重置</el-button
+          >
           <el-button type="primary" icon="Search">搜索</el-button>
         </div>
       </template>
@@ -25,15 +27,22 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
-    const formData = ref({
-      id: "",
-      password: "",
-      name: "",
-      sport: "",
-      createTime: "",
-    });
-    return { formData };
+  setup(props) {
+    const formItems = props.formConfig.formItems ?? [];
+
+    //初始化值
+    const formOriginData: any = [];
+    for (const item of formItems) {
+      formOriginData[item.field] = "";
+    }
+
+    const formData = ref(formOriginData);
+    const handleClickReset = () => {
+      for (const key in formOriginData) {
+        formData.value[`${key}`] = formOriginData[`${key}`];
+      }
+    };
+    return { formData, handleClickReset };
   },
 });
 </script>
