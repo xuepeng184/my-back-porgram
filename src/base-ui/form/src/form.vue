@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, ref, watch } from "vue";
+import { defineComponent, PropType, ref, watch } from "vue";
 import { IFromItem } from "../types/index";
 export default defineComponent({
   props: {

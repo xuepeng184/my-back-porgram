@@ -60,4 +60,21 @@ export function pathMapToBread(userMenus: any[], currentPath: string) {
   return bread;
 }
 
+export function mapMenusToPermissions(userMenus: any[]) {
+  const permissions: string[] = [];
+
+  const recursePermission = (menus: any[]) => {
+    for (const menu of menus) {
+      if (menu.type == 1 || menu.type == 2) {
+        recursePermission(menu.children ?? []);
+      } else if (menu.type == 3) {
+        permissions.push(menu.permission);
+      }
+    }
+  };
+
+  recursePermission(userMenus);
+  return permissions;
+}
+
 export { firstMenu };

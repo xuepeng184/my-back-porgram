@@ -9,7 +9,9 @@
           <el-button type="primary" icon="Refresh" @click="handleClickReset"
             >重置</el-button
           >
-          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button type="primary" icon="Search" @click="handleSearchClick"
+            >搜索</el-button
+          >
         </div>
       </template>
     </xpForm>
@@ -27,7 +29,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  emits: ["resetBtnClick", "searchBtnClick"],
+  setup(props, { emit }) {
     const formItems = props.formConfig.formItems ?? [];
 
     //初始化值
@@ -41,8 +44,14 @@ export default defineComponent({
       for (const key in formOriginData) {
         formData.value[`${key}`] = formOriginData[`${key}`];
       }
+      emit("resetBtnClick");
     };
-    return { formData, handleClickReset };
+
+    const handleSearchClick = () => {
+      emit("searchBtnClick", formData.value);
+    };
+
+    return { formData, handleClickReset, handleSearchClick };
   },
 });
 </script>

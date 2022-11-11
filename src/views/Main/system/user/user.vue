@@ -1,7 +1,12 @@
 <template>
   <div class="user">
-    <page-search :formConfig="formConfig"></page-search>
+    <page-search
+      :formConfig="formConfig"
+      @resetBtnClick="handleReset"
+      @searchBtnClick="handleSearch"
+    ></page-search>
     <page-content
+      ref="pageContentRef"
       :contentConfig="contentConfig"
       page-name="user"
     ></page-content>
@@ -15,13 +20,19 @@ import pageSearch from "../../../../components/page-search";
 import xpTable from "../../../../base-ui/table/index";
 import { contentConfig } from "./config/content.config";
 import pageContent from "../../../../components/page-content";
+import { usePageSearch } from "@/hooks/usePageSearch";
 
 export default defineComponent({
   name: "user",
   setup() {
+    const [pageContentRef, handleSearch, handleReset] = usePageSearch();
+
     return {
       formConfig,
       contentConfig,
+      handleReset,
+      handleSearch,
+      pageContentRef,
     };
   },
   components: { pageSearch, xpTable, pageContent },

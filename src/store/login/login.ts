@@ -9,7 +9,7 @@ import { IRootState } from "../type";
 import { IAccount } from "@/network/login/type";
 import LocalCache from "@/utils/cache";
 import router from "@/router";
-import { mapMenusToRoutes } from "@/utils/map-menus";
+import { mapMenusToRoutes, mapMenusToPermissions } from "@/utils/map-menus";
 
 const loginModule: Module<ILoginState, IRootState> = {
   namespaced: true,
@@ -18,6 +18,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       token: "",
       userInfo: {},
       userMenus: [],
+      permissions: [],
     };
   },
   mutations: {
@@ -33,6 +34,10 @@ const loginModule: Module<ILoginState, IRootState> = {
       routes.forEach((route) => {
         router.addRoute("main", route);
       });
+
+      //获取用户权限
+      const permission = mapMenusToPermissions(userMenus);
+      state.permissions = permission;
     },
   },
   actions: {
@@ -59,7 +64,6 @@ const loginModule: Module<ILoginState, IRootState> = {
       router.push("/main");
     },
 
-    phoneLoginAction({ commit }, payload: any) {},
     loadLocalLogin({ commit }) {
       const token = LocalCache.getCache("token");
       if (token) {
