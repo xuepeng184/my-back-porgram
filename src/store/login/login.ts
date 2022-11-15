@@ -1,9 +1,5 @@
 import { Module } from "vuex";
-import {
-  accountLoginRequest,
-  requestUserInfo,
-  requestUserMenus,
-} from "../../network/login/login";
+import { accountLoginRequest, requestUserInfo, requestUserMenus } from "../../network/login/login";
 import { ILoginState } from "./type";
 import { IRootState } from "../type";
 import { IAccount } from "@/network/login/type";
@@ -41,12 +37,15 @@ const loginModule: Module<ILoginState, IRootState> = {
     },
   },
   actions: {
-    async accountLoginAction({ commit }, payload: IAccount) {
+    async accountLoginAction({ commit, dispatch }, payload: IAccount) {
       const accountResult = await accountLoginRequest(payload);
       console.log("account", accountResult);
       const { id, token } = accountResult.data;
       commit("changeToken", token);
       LocalCache.setCache("token", token);
+
+      //发送初始化请求
+      dispatch("getInitialDataAction", null, { root: true });
       //请求用户信息
       const userInfoResult = await requestUserInfo(id);
       console.log("userInfo", userInfoResult);
@@ -64,10 +63,11 @@ const loginModule: Module<ILoginState, IRootState> = {
       router.push("/main");
     },
 
-    loadLocalLogin({ commit }) {
+    loadLocalLogin({ commit, dispatch }) {
       const token = LocalCache.getCache("token");
       if (token) {
         commit("changeToken", token);
+        dispatch("getInitialDataAction", null, { root: true });
       }
       const userInfo = LocalCache.getCache("userInfo");
       if (userInfo) {

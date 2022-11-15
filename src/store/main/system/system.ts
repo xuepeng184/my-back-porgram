@@ -2,7 +2,12 @@ import { Module } from "vuex";
 import { ISystemState } from "./type";
 import { IRootState } from "../../type";
 
-import { getPageListData } from "@/network/main/system/system";
+import {
+  getPageListData,
+  deletePageData,
+  createPageData,
+  editPageData,
+} from "@/network/main/system/system";
 
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
@@ -68,6 +73,49 @@ const systemModule: Module<ISystemState, IRootState> = {
       const { list, totalCount } = pageResult.data;
       commit(`change${pageName}List`, list);
       commit(`change${pageName}Count`, totalCount);
+    },
+    async deletePageDataAction({ dispatch }, payload: any) {
+      const { pageName, id } = payload;
+      const pageUrl = `/${pageName == "user" ? pageName + "s" : pageName}/${id}`;
+      let result = await deletePageData(pageUrl);
+      console.log(result);
+
+      //重新发送请求
+      dispatch("getPageListAction", {
+        pageName: pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+        },
+      });
+    },
+
+    async createPageDataAction({ dispatch }, payload: any) {
+      const { pageName, newData } = payload;
+      const pageUrl = `/${pageName == "user" ? pageName + "s" : pageName}`;
+      await createPageData(pageUrl, newData);
+      //重新发送请求
+      dispatch("getPageListAction", {
+        pageName: pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+        },
+      });
+    },
+    async editPageDataAction({ dispatch }, payload: any) {
+      const { pageName, editData, id } = payload;
+      const pageUrl = `/${pageName == "user" ? pageName + "s" : pageName}/${id}`;
+      await editPageData(pageUrl, editData);
+
+      //重新发送请求
+      dispatch("getPageListAction", {
+        pageName: pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+        },
+      });
     },
   },
   getters: {

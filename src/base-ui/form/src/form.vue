@@ -11,6 +11,7 @@
               :label="item.label"
               :rules="item.rules"
               :style="itemStyle"
+              v-if="!item.isHidden"
             >
               <template v-if="item.type == 'input' || item.type == 'password'">
                 <el-input

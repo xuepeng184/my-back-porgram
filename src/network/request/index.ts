@@ -45,6 +45,7 @@ class XpRequest {
       },
       (error) => {
         console.log("响应拦截成功");
+        console.log(error);
         return error;
       }
     );
@@ -72,6 +73,13 @@ class XpRequest {
     return this.request<T>({ ...config, method: "post" });
   }
 
+  delete<T = any>(config: XpRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "delete" });
+  }
+
+  patch<T = any>(config: XpRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "patch" });
+  }
   //所有实例都有的拦截器
 }
 

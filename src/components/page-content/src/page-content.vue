@@ -20,14 +20,28 @@
       <template #updateAt="scope">
         <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
-      <template #handler>
+      <template #handler="scope">
         <div class="handlerBtn">
-          <el-link size="small" type="primary" v-if="isUpdate">编辑</el-link>
-          <el-link size="small" type="primary" v-if="isDelete">删除</el-link>
+          <el-link
+            size="small"
+            type="primary"
+            v-if="isUpdate"
+            @click="handleEditClick(scope.row)"
+            >编辑</el-link
+          >
+          <el-link
+            size="small"
+            type="primary"
+            v-if="isDelete"
+            @click="handleDeleteClick(scope.row)"
+            >删除</el-link
+          >
         </div>
       </template>
       <template #headerHandler>
-        <el-button type="primary" v-if="isCreate">新建用户</el-button>
+        <el-button type="primary" v-if="isCreate" @click="handleNewClick"
+          >新建用户</el-button
+        >
       </template>
 
       <!-- 动态插槽 -->
@@ -60,7 +74,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  emits: ["newBtnClick", "editBtnClick"],
+  setup(props, { emit }) {
     const store = useStore();
 
     //获取权限
@@ -69,7 +84,7 @@ export default defineComponent({
     const isDelete = usePermission(props.pageName, "delete");
     const isQuery = usePermission(props.pageName, "query");
 
-    const pageInfo = ref({ currentPage: 0, pageSize: 10 });
+    const pageInfo = ref({ currentPage: 1, pageSize: 10 });
 
     watch(pageInfo, () => getPageData());
 
@@ -78,7 +93,7 @@ export default defineComponent({
       store.dispatch("system/getPageListAction", {
         pageName: props.pageName,
         queryInfo: {
-          offset: pageInfo.value.currentPage * pageInfo.value.pageSize,
+          offset: (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize,
           size: pageInfo.value.pageSize,
           ...searchData,
         },
@@ -105,6 +120,23 @@ export default defineComponent({
       }
       return true;
     });
+
+    //删除按钮的回调
+    const handleDeleteClick = (item: any) => {
+      store.dispatch("system/deletePageDataAction", {
+        pageName: props.pageName,
+        id: item.id,
+      });
+    };
+
+    const handleEditClick = (item: any) => {
+      emit("editBtnClick", item);
+    };
+
+    const handleNewClick = () => {
+      emit("newBtnClick");
+    };
+
     return {
       isUpdate,
       isCreate,
@@ -114,6 +146,9 @@ export default defineComponent({
       pageInfo,
       isDelete,
       otherPropSlots,
+      handleDeleteClick,
+      handleEditClick,
+      handleNewClick,
     };
   },
   components: {
@@ -126,5 +161,9 @@ export default defineComponent({
 .page-content {
   padding: 20px;
   border-top: 20px solid #f5f5f5;
+}
+.handlerBtn {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

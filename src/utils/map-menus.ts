@@ -35,11 +35,7 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   return routes;
 }
 
-export function pathMapToMenus(
-  userMenus: any[],
-  currentPath: string,
-  bread?: IBread[]
-): any {
+export function pathMapToMenus(userMenus: any[], currentPath: string, bread?: IBread[]): any {
   for (const menu of userMenus) {
     if (menu.type == 1) {
       const findMenu = pathMapToMenus(menu.children ?? [], currentPath);
@@ -75,6 +71,22 @@ export function mapMenusToPermissions(userMenus: any[]) {
 
   recursePermission(userMenus);
   return permissions;
+}
+
+export function getMenuLeafKeys(menuList: any[]) {
+  const leftKeys: number[] = [];
+  const getLeaf = (menuList: any[]) => {
+    for (const menu of menuList) {
+      if (menu.children) {
+        getLeaf(menu.children);
+      } else {
+        leftKeys.push(menu.id);
+      }
+    }
+  };
+  getLeaf(menuList);
+
+  return leftKeys;
 }
 
 export { firstMenu };
