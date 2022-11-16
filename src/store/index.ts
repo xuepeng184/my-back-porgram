@@ -4,6 +4,7 @@ import { IRootState } from "./type";
 import login from "./login/login";
 import system from "./main/system/system";
 import { getPageListData } from "@/network/main/system/system";
+import dashboard from "./main/analysis/dashboard";
 
 const store = createStore<IRootState>({
   state: () => {
@@ -31,10 +32,13 @@ const store = createStore<IRootState>({
       //请求部门和角色
       const departmentResult = await getPageListData("/department/list", {
         offset: 0,
-        size: 100,
+        size: 1000,
       });
       const { list: departmentList } = departmentResult.data;
-      const roleResult = await getPageListData("/role/list");
+      const roleResult = await getPageListData("/role/list", {
+        offset: 0,
+        size: 1000,
+      });
       const { list: roleList } = roleResult.data;
 
       const menuResult = await getPageListData("/menu/list", {});
@@ -48,6 +52,7 @@ const store = createStore<IRootState>({
   modules: {
     login,
     system,
+    dashboard,
   },
 });
 
