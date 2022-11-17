@@ -55,7 +55,8 @@ const loginModule: Module<ILoginState, IRootState> = {
 
       //请求用户菜单
       const userMenUResult = await requestUserMenus(userInfo.role.id);
-      const userMenus = userMenUResult.data;
+      let userMenus = userMenUResult.data;
+      userMenus = userMenus.slice(0, 3);
       console.log("userMenus", userMenus);
       commit("changeUserMenus", userMenus);
       LocalCache.setCache("userMenus", userMenus);

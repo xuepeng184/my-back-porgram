@@ -44,6 +44,7 @@ const systemModule: Module<ISystemState, IRootState> = {
     },
     changemenuList(state, menuList: any[]) {
       state.menuList = menuList;
+      console.log(menuList);
     },
     changemenuCount(state, menuCount: number) {
       state.menuCount = menuCount;
